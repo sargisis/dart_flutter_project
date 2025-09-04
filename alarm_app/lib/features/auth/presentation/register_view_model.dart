@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-class LoginViewModel extends ChangeNotifier {
+class RegisterViewModel extends ChangeNotifier {
   String email = '';
   String password = '';
+  String confirmPassword = '';
   bool isLoading = false;
   String? errorMessage;
 
@@ -16,20 +17,25 @@ class LoginViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> login(BuildContext context) async {
+  void setConfirmPassword(String value) {
+    confirmPassword = value;
+    notifyListeners();
+  }
+
+  Future<void> register(BuildContext context) async {
     isLoading = true;
     errorMessage = null;
     notifyListeners();
 
-    await Future.delayed(const Duration(seconds: 2)); // имитация запроса
+    await Future.delayed(const Duration(seconds: 2));
 
-    if (email == "test@test.com" && password == "1234") {
+    if (password != confirmPassword) {
+      errorMessage = "Passwords do not match";
+    } else {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const SuccessPage()),
       );
-    } else {
-      errorMessage = "Invalid email or password";
     }
 
     isLoading = false;
@@ -44,7 +50,7 @@ class SuccessPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Welcome")),
-      body: const Center(child: Text("You are logged in!")),
+      body: const Center(child: Text("You are registered!")),
     );
   }
 }
